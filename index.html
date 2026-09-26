@@ -8,6 +8,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
     
+    <!-- Firebase SDK v9 Compat (Sangat Stabil & Langsung Connect) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
     <style>
         :root {
             --bg-dark: #0a0c10;
@@ -487,7 +491,7 @@
     <div class="container">
         <header>
             <h1 class="logo-title">SOLOQ</h1>
-            <p class="tagline">Ruang Literasi & Perpustakaan Komunitas Literasi</p>
+            <p class="tagline">Ruang Literasi & Perpustakaan Komunitas Pendidikan</p>
         </header>
 
         <!-- Section Tentang SOLOQ -->
@@ -495,7 +499,7 @@
             <h2 class="about-title">✦ Tentang SOLOQ</h2>
             <div class="about-text">
                 <p>
-                    <strong>SOLOQ</strong> adalah suatu komunitas Literasi yang dikerjakan secara bergandengan tangan. Ia lahir bukan karena keresahan, melainkan karena cinta akan pengetahuan tanah, air, api dan udara di semesta raya.
+                    <strong>SOLOQ</strong> adalah suatu komunitas pendidikan yang dikerjakan secara bergandengan tangan. Ia lahir bukan karena keresahan, melainkan karena cinta akan pengetahuan tanah, air, api dan udara di semesta raya.
                 </p>
                 <p>
                     Ia adalah sebuah upaya akar rumput untuk mencipta masyarakat dengan kesadaran yang lebih segar dan kaya akan pengertian-pengertian.
@@ -569,30 +573,27 @@
         </section>
 
         <footer>
-            <p>Mendirikan & Dikembangkan oleh <span class="founder-tag">Mursyiduddin S,Hum</span> & <span class="founder-tag">SOLOQ Community</span></p>
+            <p>Mendirikan & Dikembangkan oleh <span class="founder-tag">Syarif</span> & <span class="founder-tag">SOLOQ Community</span></p>
             <p>© 2026 SOLOQ — Komunitas Pendidikan. Hak Cipta Dilindungi.</p>
         </footer>
     </div>
 
-    <!-- Firebase SDK v10 Modern (Modular via CDN) -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-        // Konfigurasi Database Firebase milik SOLOQ
+    <!-- Script Firebase Engine -->
+    <script>
+        // 1. Inisialisasi Firebase Database SOLOQ
         const firebaseConfig = {
             databaseURL: "https://soloq-library-default-rtdb.asia-southeast1.firebasedatabase.app/"
         };
+        
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const booksRef = database.ref('books');
 
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
-        const booksRef = ref(database, 'books');
+        // 2. Tiga PIN Terdaftar untuk Admin
+        const DAFTAR_PIN_ADMIN = ["778899", "550313", "554433"];
 
-        // DAFTAR PIN KHUSUS UNTUK 3 ORANG ADMIN
-        const DAFTAR_PIN_ADMIN = ["778899", "123456", "554433"];
-
-        // Toggle Theme Function
-        window.toggleTheme = function() {
+        // Toggle Theme
+        function toggleTheme() {
             document.body.classList.toggle('light-theme');
             const btn = document.getElementById('themeBtn');
             if (document.body.classList.contains('light-theme')) {
@@ -600,11 +601,11 @@
             } else {
                 btn.innerText = '☀️ Mode Terang';
             }
-        };
+        }
 
-        // Tambah Buku dengan PIN
+        // 3. Tambah Buku dengan Pop-up PIN
         document.getElementById('addBookForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
             const inputPin = prompt("🔒 Masukkan PIN Keamanan Admin/Pengurus untuk menambah buku:");
-            if (!input
+            if (!inputPin) re
