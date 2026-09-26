@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOLOQ — Komunitas Pendidikan</title>
+    <title>SOLOQ — Komunitas Literasi</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
@@ -554,7 +553,7 @@
     <div class="container">
         <header>
             <h1 class="logo-title">SOLOQ</h1>
-            <p class="tagline">Ruang Literasi & Perpustakaan Komunitas Pendidikan</p>
+            <p class="tagline">Ruang diskusi & Perpustakaan Komunitas literasi</p>
         </header>
 
         <!-- Section Tentang SOLOQ -->
@@ -562,7 +561,7 @@
             <h2 class="about-title">✦ Tentang SOLOQ</h2>
             <div class="about-text">
                 <p>
-                    <strong>SOLOQ</strong> adalah suatu komunitas pendidikan yang dikerjakan secara bergandengan tangan. Ia lahir bukan karena keresahan, melainkan karena cinta akan pengetahuan tanah, air, api dan udara di semesta raya.
+                    <strong>SOLOQ</strong> adalah suatu komunitas literasi yang dikerjakan secara bergandengan tangan. Ia lahir bukan karena keresahan, melainkan karena cinta akan pengetahuan tanah, air, api dan udara di semesta raya.
                 </p>
                 <p>
                     Ia adalah sebuah upaya akar rumput untuk mencipta masyarakat dengan kesadaran yang lebih segar dan kaya akan pengertian-pengertian.
@@ -628,249 +627,4 @@
             <!-- Stats Bar -->
             <div class="stats-bar">
                 <div class="stats-item">Total Buku: <strong id="statTotal">0</strong></div>
-                <div class="stats-item">Tersedia: <strong id="statAvailable" style="color:#2ecc71">0</strong></div>
-                <div class="stats-item">Dipinjam: <strong id="statBorrowed" style="color:#e74c3c">0</strong></div>
-                <div class="stats-item">Rekomendasi 🎯: <strong id="statRandom">-</strong></div>
             </div>
-
-            <!-- Controls Grid -->
-            <div class="controls-grid">
-                <input type="text" id="searchInput" placeholder="🔍 Cari judul, penulis, penyumbang..." oninput="renderBooks()">
-                
-                <select id="filterElement" onchange="renderBooks()">
-                    <option value="all">🌐 Semua Elemen</option>
-                    <option value="api">🔥 Api</option>
-                    <option value="tanah">🌱 Tanah</option>
-                    <option value="air">🌊 Air</option>
-                    <option value="udara">🌬️ Udara</option>
-                </select>
-
-                <select id="filterStatus" onchange="renderBooks()">
-                    <option value="all">📌 Semua Status</option>
-                    <option value="tersedia">✅ Tersedia</option>
-                    <option value="dipinjam">📕 Dipinjam</option>
-                </select>
-
-                <select id="sortBy" onchange="renderBooks()">
-                    <option value="pinned">📌 Disematkan / Pinned Pertama</option>
-                    <option value="newest">🕒 Terbaru Ditambahkan</option>
-                    <option value="title">🔤 Abjad Judul (A-Z)</option>
-                    <option value="rating">⭐ Rating Tertinggi</option>
-                </select>
-
-                <div>
-                    <button class="btn-action" onclick="pickRandomBook()">🎲 Acak Buku</button>
-                </div>
-            </div>
-
-            <div id="booksGrid" class="books-grid"></div>
-        </section>
-
-        <footer>
-            <p>Pendiri Komunitas: <span class="founder-tag">Mursyiduddin S.Hum</span></p>
-            <p>&copy; SOLOQ — Diabadikan bersama tanah, air, api, dan udara.</p>
-        </footer>
-    </div>
-
-    <script>
-        // Realtime Public Cloud Database (Firebase)
-        const firebaseConfig = {
-            databaseURL: "https://soloq-library-default-rtdb.asia-southeast1.firebasedatabase.app"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database().ref('books');
-
-        const booksGrid = document.getElementById('booksGrid');
-        const addBookForm = document.getElementById('addBookForm');
-        let books = [];
-
-        // Mengambil data real-time dari Server Cloud publik
-        db.on('value', (snapshot) => {
-            const data = snapshot.val();
-            books = [];
-            if (data) {
-                Object.keys(data).forEach(key => {
-                    books.push({ dbKey: key, ...data[key] });
-                });
-            }
-            renderBooks();
-        });
-
-        function renderBooks() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const filterElement = document.getElementById('filterElement').value;
-            const filterStatus = document.getElementById('filterStatus').value;
-            const sortBy = document.getElementById('sortBy').value;
-
-            const total = books.length;
-            const available = books.filter(b => b.status === 'tersedia' || !b.status).length;
-            const borrowed = books.filter(b => b.status === 'dipinjam').length;
-
-            document.getElementById('statTotal').innerText = total;
-            document.getElementById('statAvailable').innerText = available;
-            document.getElementById('statBorrowed').innerText = borrowed;
-
-            let filtered = books.filter(book => {
-                const matchSearch = (book.title || '').toLowerCase().includes(searchTerm) || 
-                                    (book.author || '').toLowerCase().includes(searchTerm) || 
-                                    (book.contributor || '').toLowerCase().includes(searchTerm);
-                const matchElement = filterElement === 'all' || book.element === filterElement;
-                const matchStatus = filterStatus === 'all' || (book.status || 'tersedia') === filterStatus;
-                return matchSearch && matchElement && matchStatus;
-            });
-
-            if (sortBy === 'title') {
-                filtered.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
-            } else if (sortBy === 'rating') {
-                filtered.sort((a, b) => b.rating - a.rating);
-            } else if (sortBy === 'newest') {
-                filtered.sort((a, b) => b.id - a.id);
-            } else {
-                filtered.sort((a, b) => (b.isPinned ? 1 : 0) - (a.isPinned ? 1 : 0) || b.id - a.id);
-            }
-
-            booksGrid.innerHTML = '';
-
-            if (filtered.length === 0) {
-                booksGrid.innerHTML = `
-                    <div class="empty-shelf">
-                        <p>Belum ada buku di perpustakaan. Tambahkan buku di atas!</p>
-                    </div>
-                `;
-                return;
-            }
-
-            filtered.forEach((book) => {
-                const bookCard = document.createElement('div');
-                bookCard.className = 'book-card';
-                bookCard.setAttribute('data-element', book.element);
-
-                let elementIcon = '🌱';
-                if(book.element === 'api') elementIcon = '🔥';
-                if(book.element === 'air') elementIcon = '🌊';
-                if(book.element === 'udara') elementIcon = '🌬️';
-
-                const stars = '⭐'.repeat(book.rating || 5);
-                const isPinned = book.isPinned ? 'pinned' : '';
-                const currentStatus = book.status || 'tersedia';
-                const statusBadgeClass = currentStatus === 'tersedia' ? 'status-tersedia' : 'status-dipinjam';
-                const statusText = currentStatus === 'tersedia' ? '✅ Tersedia' : `📕 Dipinjam (${escapeHtml(book.borrower || 'Anggota')})`;
-
-                bookCard.innerHTML = `
-                    <div>
-                        <div class="book-card-header">
-                            <h3 class="book-title">${escapeHtml(book.title)}</h3>
-                            <button class="btn-pin ${isPinned}" onclick="togglePin('${book.dbKey}', ${!book.isPinned})" title="Sematkan Ke Atas">📌</button>
-                        </div>
-                        <span class="book-status-badge ${statusBadgeClass}">${statusText}</span>
-                        <p class="book-author">Oleh: ${escapeHtml(book.author)} ${elementIcon}</p>
-                        <div class="book-rating">${stars} (${book.rating || 5}/5)</div>
-                        <p class="book-desc">${escapeHtml(book.desc)}</p>
-                    </div>
-                    <div class="book-footer">
-                        <span class="book-contributor">Penyumbang: <strong>${escapeHtml(book.contributor)}</strong></span>
-                        <div class="book-actions">
-                            <button class="btn-icon" onclick="toggleBorrowStatus('${book.dbKey}', '${currentStatus}')" title="Ubah Status Pinjam">🔄</button>
-                            <button class="btn-icon" onclick="editBook('${book.dbKey}')" title="Edit Buku">✏️</button>
-                            <button class="btn-delete" onclick="deleteBook('${book.dbKey}')" title="Hapus Buku">🗑️</button>
-                        </div>
-                    </div>
-                `;
-
-                booksGrid.appendChild(bookCard);
-            });
-        }
-
-        // Tambah buku langsung ke server online
-        addBookForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const newBook = {
-                id: Date.now(),
-                title: document.getElementById('bookTitle').value,
-                author: document.getElementById('bookAuthor').value,
-                element: document.getElementById('bookElement').value,
-                rating: parseInt(document.getElementById('bookRating').value),
-                contributor: document.getElementById('contributor').value,
-                desc: document.getElementById('bookDesc').value,
-                isPinned: false,
-                status: "tersedia",
-                borrower: ""
-            };
-
-            db.push(newBook);
-            addBookForm.reset();
-        });
-
-        function togglePin(key, newPinnedState) {
-            db.child(key).update({ isPinned: newPinnedState });
-        }
-
-        function toggleBorrowStatus(key, currentStatus) {
-            if (currentStatus === 'dipinjam') {
-                if (confirm("Kembalikan buku ini ke status Tersedia?")) {
-                    db.child(key).update({ status: 'tersedia', borrower: '' });
-                }
-            } else {
-                const borrowerName = prompt("Siapa yang meminjam buku ini?");
-                if (borrowerName && borrowerName.trim() !== '') {
-                    db.child(key).update({ status: 'dipinjam', borrower: borrowerName.trim() });
-                }
-            }
-        }
-
-        function deleteBook(key) {
-            if (confirm("Apakah Anda yakin ingin menghapus buku ini?")) {
-                db.child(key).remove();
-            }
-        }
-
-        function editBook(key) {
-            const book = books.find(b => b.dbKey === key);
-            if (!book) return;
-
-            const newTitle = prompt("Edit Judul Buku:", book.title);
-            if (newTitle === null) return;
-
-            const newAuthor = prompt("Edit Penulis:", book.author);
-            if (newAuthor === null) return;
-
-            const newDesc = prompt("Edit Catatan / Resensi:", book.desc);
-            if (newDesc === null) return;
-
-            db.child(key).update({
-                title: newTitle.trim() || book.title,
-                author: newAuthor.trim() || book.author,
-                desc: newDesc.trim() || book.desc
-            });
-        }
-
-        function pickRandomBook() {
-            const availableBooks = books.filter(b => b.status === 'tersedia' || !b.status);
-            if (availableBooks.length === 0) {
-                alert("Tidak ada buku yang tersedia untuk direkomendasikan saat ini!");
-                return;
-            }
-            const randomIndex = Math.floor(Math.random() * availableBooks.length);
-            const randomBook = availableBooks[randomIndex];
-            document.getElementById('statRandom').innerText = `"${randomBook.title}" (${randomBook.author})`;
-        }
-
-        function toggleTheme() {
-            document.body.classList.toggle('light-theme');
-            const themeBtn = document.getElementById('themeBtn');
-            if (document.body.classList.contains('light-theme')) {
-                themeBtn.innerText = '☀️ Mode Gelap';
-            } else {
-                themeBtn.innerText = '🌙 Mode Terang';
-            }
-        }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.innerText = text;
-            return div.innerHTML;
-        }
-    </script>
-</body>
-</html>
