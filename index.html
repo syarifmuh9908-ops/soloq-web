@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOLOQ — Komunitas Pendidikan</title>
+    <title>SOLOQ — Komunitas Literasi</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
@@ -471,6 +471,7 @@
         footer .founder-tag {
             color: var(--accent-gold);
             font-weight: 600;
+            letter-spacing: 0.02em;
         }
     </style>
 </head>
@@ -498,7 +499,7 @@
             <h2 class="about-title">✦ Tentang SOLOQ</h2>
             <div class="about-text">
                 <p>
-                    <strong>SOLOQ</strong> adalah suatu komunitas pendidikan yang dikerjakan secara bergandengan tangan. Ia lahir bukan karena keresahan, melainkan karena cinta akan pengetahuan tanah, air, api dan udara di semesta raya.
+                    <strong>SOLOQ</strong> adalah suatu komunitas literasi yang dikerjakan secara bergandengan tangan. Ia lahir bukan karena keresahan, melainkan karena cinta akan pengetahuan tanah, air, api dan udara di semesta raya.
                 </p>
                 <p>
                     Ia adalah sebuah upaya akar rumput untuk mencipta masyarakat dengan kesadaran yang lebih segar dan kaya akan pengertian-pengertian.
@@ -547,10 +548,6 @@
                         <input type="text" id="contributor" placeholder="Nama anggota" required>
                     </div>
                     <div class="input-group full-width">
-                        <label for="adminPin">🔒 PIN Keamanan Admin (Wajib)</label>
-                        <input type="password" id="adminPin" placeholder="Masukkan PIN khusus untuk menambah data" required>
-                    </div>
-                    <div class="input-group full-width">
                         <label for="bookDesc">Catatan Ringkas / Resensi</label>
                         <textarea id="bookDesc" rows="3" placeholder="Tulis gambaran singkat isi buku..." required></textarea>
                     </div>
@@ -576,12 +573,12 @@
         </section>
 
         <footer>
-            <p>Dikembangkan oleh <span class="founder-tag">SOLOQ Community</span></p>
+            <p>Mendirikan & Dikembangkan oleh <span class="founder-tag">Syarif</span> & <span class="founder-tag">SOLOQ Community</span></p>
             <p>© 2026 SOLOQ — Komunitas Pendidikan. Hak Cipta Dilindungi.</p>
         </footer>
     </div>
 
-    <!-- Script Firebase & Logika PIN -->
+    <!-- Script Firebase & Keamanan PIN -->
     <script>
         // 1. Konfigurasi Firebase Realtime Database
         const firebaseConfig = {
@@ -591,8 +588,8 @@
         const database = firebase.database();
         const booksRef = database.ref('books');
 
-        // 2. DAFTAR PIN KHUSUS ADMIN (Bisa kamu ganti atau tambah hingga 3 PIN)
-        const DAFTAR_PIN_ADMIN = ["181808", "567809", "554433"];
+        // 2. DAFTAR PIN KHUSUS UNTUK 3 ORANG ADMIN (Bisa kamu ganti nomor PIN ini kapan saja)
+        const DAFTAR_PIN_ADMIN = ["778899", "551023", "554433"];
 
         // Toggle Theme
         function toggleTheme() {
@@ -605,5 +602,9 @@
             }
         }
 
-        // 3. Tambah Buku dengan Pengecekan PIN
-        document.getElementById('addBookForm').addE
+        // 3. Tambah Buku dengan Pop-up PIN
+        document.getElementById('addBookForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Minta PIN via pop-up
+            const inputPin = prompt("🔒 Masukkan PIN Keamanan Admin/Pengurus untuk m
