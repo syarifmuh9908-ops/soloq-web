@@ -1,17 +1,13 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOLOQ — Komunitas Literasi</title>
+    <title>SOLOQ — Komunitas Pendidikan</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
-    
-    <!-- Firebase Realtime Database SDK -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
     <style>
         :root {
             --bg-dark: #0a0c10;
@@ -535,6 +531,10 @@
             font-weight: 600;
             letter-spacing: 0.02em;
         }
+
+        #importFileInput {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -553,7 +553,7 @@
     <div class="container">
         <header>
             <h1 class="logo-title">SOLOQ</h1>
-            <p class="tagline">Ruang diskusi & Perpustakaan Komunitas literasi</p>
+            <p class="tagline">Ruang Literasi & Perpustakaan Komunitas Pendidikan</p>
         </header>
 
         <!-- Section Tentang SOLOQ -->
@@ -561,7 +561,7 @@
             <h2 class="about-title">✦ Tentang SOLOQ</h2>
             <div class="about-text">
                 <p>
-                    <strong>SOLOQ</strong> adalah suatu komunitas literasi yang dikerjakan secara bergandengan tangan. Ia lahir bukan karena keresahan, melainkan karena cinta akan pengetahuan tanah, air, api dan udara di semesta raya.
+                    <strong>SOLOQ</strong> adalah suatu komunitas pendidikan yang dikerjakan secara bergandengan tangan. Ia lahir bukan karena keresahan, melainkan karena cinta akan pengetahuan tanah, air, api dan udara di semesta raya.
                 </p>
                 <p>
                     Ia adalah sebuah upaya akar rumput untuk mencipta masyarakat dengan kesadaran yang lebih segar dan kaya akan pengertian-pengertian.
@@ -614,11 +614,11 @@
                         <textarea id="bookDesc" rows="3" placeholder="Tulis gambaran singkat isi buku..." required></textarea>
                     </div>
                 </div>
-                <button type="submit" class="btn-submit" id="submitBtn">➕ Tambahkan Buku ke Rak</button>
+                <button type="submit" class="btn-submit">➕ Tambahkan Buku ke Rak</button>
             </form>
         </section>
 
-        <!-- Section Rak Buku -->
+        <!-- Section Rak Buku & Tools Canggih -->
         <section class="section-card">
             <div class="shelf-header">
                 <h2 class="shelf-title">📚 Rak Buku Komunitas</h2>
@@ -627,4 +627,3 @@
             <!-- Stats Bar -->
             <div class="stats-bar">
                 <div class="stats-item">Total Buku: <strong id="statTotal">0</strong></div>
-            </div>
